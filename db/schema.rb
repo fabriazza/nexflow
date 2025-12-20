@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_12_20_175147) do
+ActiveRecord::Schema[8.1].define(version: 2025_12_20_190619) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -21,6 +21,7 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_20_175147) do
     t.bigint "user_id", null: false
     t.bigint "utility_type_id", null: false
     t.decimal "value", precision: 10, scale: 2
+    t.index ["reading_date"], name: "index_consumptions_on_reading_date"
     t.index ["user_id"], name: "index_consumptions_on_user_id"
     t.index ["utility_type_id"], name: "index_consumptions_on_utility_type_id"
   end
