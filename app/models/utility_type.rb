@@ -1,5 +1,6 @@
 class UtilityType < ApplicationRecord
-
-  validates :name, presence: true, uniqueness: true
+  has_many :consumptions
   
+  validates :name, presence: true, uniqueness: true
+  validates :unit, presence: true
 end
