@@ -1,0 +1,42 @@
+<div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <div class="mb-8">
+    <%= link_to "← Back to Dashboard", root_path, class: "text-indigo-600 hover:text-indigo-900" %>
+  </div>
+
+  <div class="bg-white shadow rounded-lg overflow-hidden">
+    <div class="px-6 py-4 border-b border-gray-200">
+      <h1 class="text-2xl font-bold text-gray-900">Consumption Details</h1>
+    </div>
+
+    <div class="px-6 py-6">
+      <dl class="grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-2">
+        <div class="sm:col-span-1">
+          <dt class="text-sm font-medium text-gray-500">Utility Type</dt>
+          <dd class="mt-1 text-sm text-gray-900"><%= @consumption.utility_type.name %></dd>
+        </div>
+
+        <div class="sm:col-span-1">
+          <dt class="text-sm font-medium text-gray-500">Value</dt>
+          <dd class="mt-1 text-sm text-gray-900"><%= @consumption.value %> <%= @consumption.unit %></dd>
+        </div>
+
+        <div class="sm:col-span-1">
+          <dt class="text-sm font-medium text-gray-500">Reading Date</dt>
+          <dd class="mt-1 text-sm text-gray-900">
+            <%= @consumption.reading_date&.strftime('%B %d, %Y') || @consumption.created_at.strftime('%B %d, %Y') %>
+          </dd>
+        </div>
+
+        <div class="sm:col-span-1">
+          <dt class="text-sm font-medium text-gray-500">Created At</dt>
+          <dd class="mt-1 text-sm text-gray-900"><%= @consumption.created_at.strftime('%B %d, %Y at %I:%M %p') %></dd>
+        </div>
+      </dl>
+
+      <div class="mt-8 flex gap-4">
+        <%= link_to "Edit", edit_consumption_path(@consumption), class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700" %>
+        <%= link_to "Delete", consumption_path(@consumption), data: { turbo_method: :delete, turbo_confirm: "Are you sure you want to delete this consumption?" }, class: "inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50" %>
+      </div>
+    </div>
+  </div>
+</div>
