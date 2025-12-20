@@ -3,7 +3,10 @@ class ConsumptionsController < ApplicationController
   before_action :set_consumption, only: [:show, :edit, :update, :destroy]
 
   def index
-    @consumptions = current_user.consumptions.includes(:utility_type).order(created_at: :desc)
+    @consumptions = current_user.consumptions.includes(:utility_type)
+    @consumptions = apply_filters(@consumptions)
+    @consumptions = @consumptions.order(reading_date: :desc, created_at: :desc)
+    @utility_types = UtilityType.all
   end
 
   def show
@@ -51,5 +54,21 @@ class ConsumptionsController < ApplicationController
 
   def consumption_params
     params.require(:consumption).permit(:utility_type_id, :value, :reading_date)
+  end
+
+  def apply_filters(scope)
+    if params[:utility_type_id].present?
+      scope = scope.where(utility_type_id: params[:utility_type_id])
+    end
+
+    if params[:start_date].present?
+      scope = scope.where("reading_date >= ?", params[:start_date])
+    end
+
+    if params[:end_date].present?
+      scope = scope.where("reading_date <= ?", params[:end_date])
+    end
+
+    scope
   end
 end
