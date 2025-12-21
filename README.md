@@ -1,24 +1,65 @@
-# README
+# Nexflow
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+A Rails 8 application for tracking utility consumptions.
 
-Things you may want to cover:
+## Requirements
 
-* Ruby version
+- Ruby 3.3+
+- Rails 8.1.1
+- PostgreSQL
+- Node.js (for asset compilation)
+- [Overmind](https://github.com/DarthSim/overmind) (process manager)
 
-* System dependencies
+## Getting Started
 
-* Configuration
+### 1. Install Dependencies
 
-* Database creation
+Install Ruby gems:
+```bash
+bundle install
+```
 
-* Database initialization
+Install JavaScript dependencies:
+```bash
+yarn install
+```
 
-* How to run the test suite
+### 2. Install Overmind
 
-* Services (job queues, cache servers, search engines, etc.)
+For macOS:
+```bash
+brew install overmind
+```
 
-* Deployment instructions
+For other platforms, see [Overmind installation guide](https://github.com/DarthSim/overmind#installation).
 
-* ...
+### 3. Database Setup
+
+Create the database:
+```bash
+rails db:create
+```
+
+Run migrations:
+```bash
+rails db:migrate
+```
+
+Seed the database:
+```bash
+rails db:seed
+```
+
+### 4. Start the Development Server
+
+Start all services with Overmind:
+```bash
+overmind s
+```
+
+This will start:
+- Rails server (Puma)
+- CSS build watcher (Tailwind)
+- JavaScript build watcher (esbuild)
+
+The application will be available at `http://localhost:3000`
