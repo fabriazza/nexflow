@@ -15,5 +15,9 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   root "consumptions#index"
   
-  resources :consumptions
+  resources :consumptions do
+    collection do
+      get :monthly_summary
+    end
+  end
 end
