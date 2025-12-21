@@ -50,7 +50,11 @@ Seed the database:
 rails db:seed
 ```
 
-### 4. Start the Development Server
+### 4. Environment variables
+
+Create the .env file in the root of the project and copy/paste inside the content of the .env.example file
+
+### 5. Start the Development Server
 
 Start all services with Overmind:
 ```bash
@@ -63,3 +67,10 @@ This will start:
 - JavaScript build watcher (esbuild)
 
 The application will be available at `http://localhost:3000`
+
+### 6. Test
+
+Run tests with RSpec:
+```bash
+rspec
+```
