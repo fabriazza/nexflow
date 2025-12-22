@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe ConsumptionsController, type: :controller do
+RSpec.describe Consumption, type: :model do
   let(:user) { User.create!(email: 'test@example.com', password: 'password123', full_name: 'Test User') }
   let(:electricity) { UtilityType.create!(name: 'Electricity', unit: 'kWh') }
   let(:gas) { UtilityType.create!(name: 'Gas', unit: 'm³') }
@@ -13,7 +13,7 @@ RSpec.describe ConsumptionsController, type: :controller do
         user.consumptions.create!(utility_type: electricity, value: 100, reading_date: Date.new(2025, 1, 25))
       ]
 
-      stats = controller.send(:calculate_statistics, Consumption.where(id: consumptions.map(&:id)))
+      stats = Consumption.calculate_statistics(Consumption.where(id: consumptions.map(&:id)))
 
       expect(stats[electricity.id][:total]).to eq(300)
       expect(stats[electricity.id][:average_daily]).to be_within(0.1).of(300.0 / 21)
@@ -28,7 +28,7 @@ RSpec.describe ConsumptionsController, type: :controller do
         user.consumptions.create!(utility_type: gas, value: 75, reading_date: Date.new(2025, 1, 20))
       ]
 
-      stats = controller.send(:calculate_statistics, Consumption.where(id: consumptions.map(&:id)))
+      stats = Consumption.calculate_statistics(Consumption.where(id: consumptions.map(&:id)))
 
       expect(stats[electricity.id][:total]).to eq(250)
       expect(stats[electricity.id][:max_peak]).to eq(150)
@@ -40,7 +40,7 @@ RSpec.describe ConsumptionsController, type: :controller do
     end
 
     it 'handles empty consumptions collection' do
-      stats = controller.send(:calculate_statistics, Consumption.none)
+      stats = Consumption.calculate_statistics(Consumption.none)
 
       expect(stats).to be_empty
     end
@@ -52,7 +52,7 @@ RSpec.describe ConsumptionsController, type: :controller do
         user.consumptions.create!(utility_type: electricity, value: 75, reading_date: Date.new(2025, 1, 25))
       ]
 
-      stats = controller.send(:calculate_statistics, Consumption.where(id: consumptions.map(&:id)))
+      stats = Consumption.calculate_statistics(Consumption.where(id: consumptions.map(&:id)))
 
       expect(stats[electricity.id][:total]).to eq(325)
       expect(stats[electricity.id][:max_peak]).to eq(200)
@@ -67,14 +67,11 @@ RSpec.describe ConsumptionsController, type: :controller do
         user.consumptions.create!(utility_type: electricity, value: 100, reading_date: Date.new(2025, 1, 25))
       ]
 
-      allow(controller).to receive(:params).and_return(
-        ActionController::Parameters.new(
-          start_date: '2025-01-01',
-          end_date: '2025-01-31'
-        )
+      stats = Consumption.calculate_statistics_with_date_range(
+        Consumption.where(id: consumptions.map(&:id)),
+        '2025-01-01',
+        '2025-01-31'
       )
-
-      stats = controller.send(:calculate_statistics_date_range, Consumption.where(id: consumptions.map(&:id)))
 
       expect(stats[electricity.id][:total]).to eq(300)
       expect(stats[electricity.id][:average_daily]).to be_within(0.1).of(300.0 / 31)
@@ -88,9 +85,11 @@ RSpec.describe ConsumptionsController, type: :controller do
         user.consumptions.create!(utility_type: electricity, value: 100, reading_date: Date.new(2025, 1, 25))
       ]
 
-      allow(controller).to receive(:params).and_return(ActionController::Parameters.new)
-
-      stats = controller.send(:calculate_statistics_date_range, Consumption.where(id: consumptions.map(&:id)))
+      stats = Consumption.calculate_statistics_with_date_range(
+        Consumption.where(id: consumptions.map(&:id)),
+        nil,
+        nil
+      )
 
       expect(stats[electricity.id][:total]).to eq(300)
       expect(stats[electricity.id][:average_daily]).to be_within(0.1).of(300.0 / 21)
@@ -105,14 +104,11 @@ RSpec.describe ConsumptionsController, type: :controller do
         user.consumptions.create!(utility_type: gas, value: 75, reading_date: Date.new(2025, 1, 20))
       ]
 
-      allow(controller).to receive(:params).and_return(
-        ActionController::Parameters.new(
-          start_date: '2025-01-01',
-          end_date: '2025-01-31'
-        )
+      stats = Consumption.calculate_statistics_with_date_range(
+        Consumption.where(id: consumptions.map(&:id)),
+        '2025-01-01',
+        '2025-01-31'
       )
-
-      stats = controller.send(:calculate_statistics_date_range, Consumption.where(id: consumptions.map(&:id)))
 
       expect(stats[electricity.id][:total]).to eq(250)
       expect(stats[electricity.id][:average_daily]).to be_within(0.1).of(250.0 / 31)
@@ -122,14 +118,11 @@ RSpec.describe ConsumptionsController, type: :controller do
     end
 
     it 'handles empty consumptions collection' do
-      allow(controller).to receive(:params).and_return(
-        ActionController::Parameters.new(
-          start_date: '2025-01-01',
-          end_date: '2025-01-31'
-        )
+      stats = Consumption.calculate_statistics_with_date_range(
+        Consumption.none,
+        '2025-01-01',
+        '2025-01-31'
       )
-
-      stats = controller.send(:calculate_statistics_date_range, Consumption.none)
 
       expect(stats).to be_empty
     end
