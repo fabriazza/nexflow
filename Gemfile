@@ -4,7 +4,7 @@ gem "rails", "~> 8.1.1"
 
 gem "bootsnap", require: false
 gem "cssbundling-rails"
-gem "devise", "~> 4.9"
+gem "devise", "~> 5.0"
 gem "jbuilder"
 gem "jsbundling-rails"
 gem "kamal", require: false
